@@ -87,6 +87,9 @@ const S3RegionLabel = document.getElementById("S3RegionLabel");
 const S3BucketLabel = document.getElementById("S3BucketLabel");
 const S3AccessKeyLabel = document.getElementById("S3AccessKeyLabel");
 const S3SecretKeyLabel = document.getElementById("S3SecretKeyLabel");
+const saveToPCloudLabel = document.getElementById("saveToPCloudLabel");
+const pCloudTokenLabel = document.getElementById("pCloudTokenLabel");
+const pCloudFolderLabel = document.getElementById("pCloudFolderLabel");
 const compressHTMLLabel = document.getElementById("compressHTMLLabel");
 const insertTextBodyLabel = document.getElementById("insertTextBodyLabel");
 const insertEmbeddedImageLabel = document.getElementById("insertEmbeddedImageLabel");
@@ -245,6 +248,9 @@ const mcpServerUrlInput = document.getElementById("mcpServerUrlInput");
 const mcpAuthTokenInput = document.getElementById("mcpAuthTokenInput");
 const saveToGitHubInput = document.getElementById("saveToGitHubInput");
 const saveToS3Input = document.getElementById("saveToS3Input");
+const saveToPCloudInput = document.getElementById("saveToPCloudInput");
+const pCloudTokenInput = document.getElementById("pCloudTokenInput");
+const pCloudFolderInput = document.getElementById("pCloudFolderInput");
 const githubTokenInput = document.getElementById("githubTokenInput");
 const githubUserInput = document.getElementById("githubUserInput");
 const githubRepositoryInput = document.getElementById("githubRepositoryInput");
@@ -541,6 +547,7 @@ importButton.addEventListener("click", () => {
 				if (profile.saveToGDrive && !profile.forceWebAuthFlow) {
 					profile.saveToGDrive = false;
 				}
+				profile.saveToPCloud = false;
 				profile.saveToClipboard = false;
 				profile.saveWithCompanion = false;
 				profile.saveCreatedBookmarks = false;
@@ -584,6 +591,7 @@ saveToClipboardInput.addEventListener("click", () => disableDestinationPermissio
 saveWithCompanionInput.addEventListener("click", () => disableDestinationPermissions(["clipboardWrite"]), false);
 saveToGDriveInput.addEventListener("click", () => disableDestinationPermissions(["clipboardWrite", "nativeMessaging"], false), false);
 saveToDropboxInput.addEventListener("click", () => disableDestinationPermissions(["clipboardWrite", "nativeMessaging"], true, false), false);
+saveToPCloudInput.addEventListener("click", () => disableDestinationPermissions(["clipboardWrite", "nativeMessaging"]), false);
 saveWithWebDAVInput.addEventListener("click", () => disableDestinationPermissions(["clipboardWrite", "nativeMessaging"]), false);
 saveWithMCPInput.addEventListener("click", () => disableDestinationPermissions(["clipboardWrite", "nativeMessaging"]), false);
 saveToRestFormApiInput.addEventListener("click", () => disableDestinationPermissions(["clipboardWrite", "nativeMessaging"]), false);
@@ -708,6 +716,9 @@ S3RegionLabel.textContent = browser.i18n.getMessage("optionS3Region");
 S3BucketLabel.textContent = browser.i18n.getMessage("optionS3Bucket");
 S3AccessKeyLabel.textContent = browser.i18n.getMessage("optionS3AccessKey");
 S3SecretKeyLabel.textContent = browser.i18n.getMessage("optionS3SecretKey");
+saveToPCloudLabel.textContent = browser.i18n.getMessage("optionSaveToPCloud");
+pCloudTokenLabel.textContent = browser.i18n.getMessage("optionPCloudToken");
+pCloudFolderLabel.textContent = browser.i18n.getMessage("optionPCloudFolder");
 saveWithCompanionLabel.textContent = browser.i18n.getMessage("optionSaveWithCompanion");
 compressHTMLLabel.textContent = browser.i18n.getMessage("optionCompressHTML");
 insertTextBodyLabel.textContent = browser.i18n.getMessage("optionInsertTextBody");
@@ -996,6 +1007,11 @@ async function refresh(profileName) {
 	woleetKeyInput.disabled = !profileOptions.addProof;
 	saveToGDriveInput.checked = profileOptions.saveToGDrive;
 	saveToDropboxInput.checked = profileOptions.saveToDropbox;
+	saveToPCloudInput.checked = profileOptions.saveToPCloud;
+	pCloudTokenInput.value = profileOptions.pCloudToken;
+	pCloudTokenInput.disabled = !profileOptions.saveToPCloud;
+	pCloudFolderInput.value = profileOptions.pCloudFolder;
+	pCloudFolderInput.disabled = !profileOptions.saveToPCloud;
 	saveWithWebDAVInput.checked = profileOptions.saveWithWebDAV;
 	webDAVURLInput.value = profileOptions.webDAVURL;
 	webDAVURLInput.disabled = !profileOptions.saveWithWebDAV;
@@ -1039,7 +1055,7 @@ async function refresh(profileName) {
 	S3SecretKeyInput.value = profileOptions.S3SecretKey;
 	S3SecretKeyInput.disabled = !profileOptions.saveToS3;
 	sharePageInput.checked = profileOptions.sharePage;
-	saveToFilesystemInput.checked = !profileOptions.saveToGDrive && !profileOptions.saveToGitHub && !profileOptions.saveToS3 && !profileOptions.saveWithCompanion && !profileOptions.saveToClipboard && !profileOptions.saveWithWebDAV && !profileOptions.saveWithMCP && !profileOptions.saveToDropbox && !profileOptions.saveToRestFormApi && !profileOptions.sharePage;
+	saveToFilesystemInput.checked = !profileOptions.saveToGDrive && !profileOptions.saveToGitHub && !profileOptions.saveToS3 && !profileOptions.saveWithCompanion && !profileOptions.saveToClipboard && !profileOptions.saveWithWebDAV && !profileOptions.saveWithMCP && !profileOptions.saveToDropbox && !profileOptions.saveToPCloud && !profileOptions.saveToRestFormApi && !profileOptions.sharePage;
 	compressHTMLInput.checked = profileOptions.compressHTML;
 	compressCSSInput.checked = profileOptions.compressCSS;
 	groupDuplicateStylesheetsInput.checked = profileOptions.groupDuplicateStylesheets;
@@ -1196,6 +1212,9 @@ async function update() {
 			woleetKey: woleetKeyInput.value,
 			saveToGDrive: saveToGDriveInput.checked,
 			saveToDropbox: saveToDropboxInput.checked,
+			saveToPCloud: saveToPCloudInput.checked,
+			pCloudToken: pCloudTokenInput.value,
+			pCloudFolder: pCloudFolderInput.value,
 			saveWithWebDAV: saveWithWebDAVInput.checked,
 			webDAVURL: webDAVURLInput.value,
 			webDAVUser: webDAVUserInput.value,

@@ -795,6 +795,18 @@
 		"message": "authentication token",
 		"description": "Options page label: 'authentication token'"
 	},
+	"optionSaveToPCloud": {
+		"message": "upload to pCloud",
+		"description": "Options page label: 'upload to pCloud'"
+	},
+	"optionPCloudToken": {
+		"message": "access token",
+		"description": "Options page label: 'access token'"
+	},
+	"optionPCloudFolder": {
+		"message": "folder path",
+		"description": "Options page label: 'folder path'"
+	},
 	"optionSaveWithCompanion": {
 		"message": "save with SingleFile Companion",
 		"description": "Options page label: 'save with SingleFile Companion'"

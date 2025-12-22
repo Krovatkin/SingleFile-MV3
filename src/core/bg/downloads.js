@@ -40,6 +40,7 @@ import { MCP } from "./../../lib/mcp/mcp.js";
 import { download } from "./download-util.js";
 import * as yabson from "./../../lib/yabson/yabson.js";
 import { RestFormApi } from "../../lib/../lib/rest-form-api/index.js";
+import { pCloud } from "../../lib/../lib/pcloud/pcloud.js";
 import * as offscreen from "./offscreen.js";
 
 const partialContents = new Map();
@@ -71,6 +72,7 @@ export {
 	saveWithWebDAV,
 	saveToRestFormApi,
 	saveToS3,
+	saveToPCloud,
 	saveWithMCP,
 	encodeSharpCharacter
 };
@@ -197,7 +199,7 @@ async function downloadContent(message, tab) {
 	const tabId = tab.id;
 	try {
 		let skipped;
-		if (message.backgroundSave && !message.saveToGDrive && !message.saveToDropbox && !message.saveWithWebDAV && !message.saveToGitHub && !message.saveToRestFormApi && !message.saveToS3) {
+		if (message.backgroundSave && !message.saveToGDrive && !message.saveToDropbox && !message.saveToPCloud && !message.saveWithWebDAV && !message.saveToGitHub && !message.saveToRestFormApi && !message.saveToS3) {
 			const testSkip = await testSkipSave(message.filename, message);
 			message.filenameConflictAction = testSkip.filenameConflictAction;
 			skipped = testSkip.skipped;
@@ -260,6 +262,11 @@ async function downloadContent(message, tab) {
 					filenameConflictAction: message.filenameConflictAction,
 					prompt
 				});
+			} else if (message.saveToPCloud) {
+				response = await saveToPCloud(message.taskId, encodeSharpCharacter(message.filename), new Blob([message.content], { type: message.mimeType }), message.pCloudToken, message.pCloudFolder, {
+					filenameConflictAction: message.filenameConflictAction,
+					prompt
+				});
 			} else {
 				response = await downloadPage(message, {
 					confirmFilename: message.confirmFilename,
@@ -315,7 +322,7 @@ async function downloadCompressedContent(message, tab) {
 	try {
 		const prompt = filename => promptFilename(tabId, filename);
 		let skipped, response;
-		if (message.backgroundSave && !message.saveToGDrive && !message.saveToDropbox && !message.saveWithWebDAV && !message.saveWithMCP && !message.saveToGitHub && !message.saveToRestFormApi && !message.sharePage) {
+		if (message.backgroundSave && !message.saveToGDrive && !message.saveToDropbox && !message.saveToPCloud && !message.saveWithWebDAV && !message.saveWithMCP && !message.saveToGitHub && !message.saveToRestFormApi && !message.sharePage) {
 			const testSkip = await testSkipSave(message.filename, message);
 			message.filenameConflictAction = testSkip.filenameConflictAction;
 			skipped = testSkip.skipped;
@@ -402,6 +409,12 @@ async function downloadCompressedContent(message, tab) {
 			} else if (message.saveToS3) {
 				const blob = await (await fetch(blobURI)).blob();
 				response = await saveToS3(message.taskId, encodeSharpCharacter(message.filename), blob, message.S3Domain, message.S3Region, message.S3Bucket, message.S3AccessKey, message.S3SecretKey, {
+					filenameConflictAction: message.filenameConflictAction,
+					prompt
+				});
+			} else if (message.saveToPCloud) {
+				const blob = await (await fetch(blobURI)).blob();
+				response = await saveToPCloud(message.taskId, encodeSharpCharacter(message.filename), blob, message.pCloudToken, message.pCloudFolder, {
 					filenameConflictAction: message.filenameConflictAction,
 					prompt
 				});
@@ -526,6 +539,20 @@ async function saveToS3(taskId, filename, blob, domain, region, bucket, accessKe
 		}
 	} catch (error) {
 		throw new Error(error.message + " (S3)");
+	}
+}
+
+async function saveToPCloud(taskId, filename, blob, token, folder, { filenameConflictAction, prompt }) {
+	try {
+		const taskInfo = business.getTaskInfo(taskId);
+		if (!taskInfo || !taskInfo.cancelled) {
+			const client = new pCloud();
+			client.setAuthInfo({ accessToken: token, folder: folder });
+			business.setCancelCallback(taskId, () => client.abort());
+			return await client.upload(filename, blob, { filenameConflictAction, prompt });
+		}
+	} catch (error) {
+		throw new Error(error.message + " (pCloud)");
 	}
 }
 

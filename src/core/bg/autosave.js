@@ -157,7 +157,7 @@ async function saveContent(message, tab) {
 			} else {
 				pageData = await offscreen.processPage(options);
 				let skipped;
-				if (!options.saveToGDrive && !options.saveWithWebDAV && !options.saveWithMCP && !options.saveToGitHub && !options.saveToDropbox && !options.saveWithCompanion && !options.saveToRestFormApi && !options.saveToS3) {
+				if (!options.saveToGDrive && !options.saveWithWebDAV && !options.saveWithMCP && !options.saveToGitHub && !options.saveToDropbox && !options.saveToPCloud && !options.saveWithCompanion && !options.saveToRestFormApi && !options.saveToS3) {
 					const testSkip = await downloads.testSkipSave(pageData.filename, options);
 					skipped = testSkip.skipped;
 					options.filenameConflictAction = testSkip.filenameConflictAction;
@@ -173,6 +173,11 @@ async function saveContent(message, tab) {
 					} if (options.saveToDropbox) {
 						const content = await (await fetch(pageData.url)).blob();
 						await downloads.saveToDropbox(message.taskId, downloads.encodeSharpCharacter(pageData.filename), content, {
+							filenameConflictAction: options.filenameConflictAction
+						});
+					} else if (options.saveToPCloud) {
+						const content = await (await fetch(pageData.url)).blob();
+						await downloads.saveToPCloud(message.taskId, downloads.encodeSharpCharacter(pageData.filename), content, options.pCloudToken, options.pCloudFolder, {
 							filenameConflictAction: options.filenameConflictAction
 						});
 					} else if (options.saveWithWebDAV) {
