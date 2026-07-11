@@ -89,6 +89,7 @@ const S3AccessKeyLabel = document.getElementById("S3AccessKeyLabel");
 const S3SecretKeyLabel = document.getElementById("S3SecretKeyLabel");
 const saveToPCloudLabel = document.getElementById("saveToPCloudLabel");
 const pCloudTokenLabel = document.getElementById("pCloudTokenLabel");
+const pCloudApiServerLabel = document.getElementById("pCloudApiServerLabel");
 const pCloudFolderLabel = document.getElementById("pCloudFolderLabel");
 const compressHTMLLabel = document.getElementById("compressHTMLLabel");
 const insertTextBodyLabel = document.getElementById("insertTextBodyLabel");
@@ -249,6 +250,7 @@ const mcpAuthTokenInput = document.getElementById("mcpAuthTokenInput");
 const saveToGitHubInput = document.getElementById("saveToGitHubInput");
 const saveToS3Input = document.getElementById("saveToS3Input");
 const saveToPCloudInput = document.getElementById("saveToPCloudInput");
+const pCloudApiServerInput = document.getElementById("pCloudApiServerInput");
 const pCloudTokenInput = document.getElementById("pCloudTokenInput");
 const pCloudFolderInput = document.getElementById("pCloudFolderInput");
 const githubTokenInput = document.getElementById("githubTokenInput");
@@ -718,6 +720,7 @@ S3AccessKeyLabel.textContent = browser.i18n.getMessage("optionS3AccessKey");
 S3SecretKeyLabel.textContent = browser.i18n.getMessage("optionS3SecretKey");
 saveToPCloudLabel.textContent = browser.i18n.getMessage("optionSaveToPCloud");
 pCloudTokenLabel.textContent = browser.i18n.getMessage("optionPCloudToken");
+pCloudApiServerLabel.textContent = browser.i18n.getMessage("optionPCloudApiServer");
 pCloudFolderLabel.textContent = browser.i18n.getMessage("optionPCloudFolder");
 saveWithCompanionLabel.textContent = browser.i18n.getMessage("optionSaveWithCompanion");
 compressHTMLLabel.textContent = browser.i18n.getMessage("optionCompressHTML");
@@ -1008,6 +1011,7 @@ async function refresh(profileName) {
 	saveToGDriveInput.checked = profileOptions.saveToGDrive;
 	saveToDropboxInput.checked = profileOptions.saveToDropbox;
 	saveToPCloudInput.checked = profileOptions.saveToPCloud;
+	pCloudApiServerInput.value = profileOptions.pCloudApiServer;
 	pCloudTokenInput.value = profileOptions.pCloudToken;
 	pCloudTokenInput.disabled = !profileOptions.saveToPCloud;
 	pCloudFolderInput.value = profileOptions.pCloudFolder;
@@ -1213,6 +1217,7 @@ async function update() {
 			saveToGDrive: saveToGDriveInput.checked,
 			saveToDropbox: saveToDropboxInput.checked,
 			saveToPCloud: saveToPCloudInput.checked,
+			pCloudApiServer: pCloudApiServerInput.value,
 			pCloudToken: pCloudTokenInput.value,
 			pCloudFolder: pCloudFolderInput.value,
 			saveWithWebDAV: saveWithWebDAVInput.checked,

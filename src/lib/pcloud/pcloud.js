@@ -23,10 +23,11 @@
 
 /* global fetch, FormData */
 
-const PCLOUD_UPLOAD_URL = "https://api.pcloud.com/uploadfile";
+
 
 class pCloud {
-	constructor() {
+	constructor(apiServer) {
+		this.apiServer = apiServer || "api.pcloud.com";
 	}
 
 	setAuthInfo(authInfo) {
@@ -41,6 +42,7 @@ class pCloud {
 
 	async upload(filename, blob, options, setCancelCallback) {
 		const uploader = new MediaUploader({
+			apiServer: this.apiServer,
 			token: this.accessToken,
 			folder: this.folder,
 			file: blob,
@@ -55,6 +57,7 @@ class pCloud {
 
 class MediaUploader {
 	constructor(options) {
+		this.apiServer = options.apiServer;
 		this.file = options.file;
 		this.token = options.token;
 		this.folder = options.folder;
@@ -83,7 +86,7 @@ class MediaUploader {
 
 		// Implementation based on print_to_pdf_ext/background.js reference
 		const encodedPath = encodeURIComponent(path);
-		const url = `${PCLOUD_UPLOAD_URL}?auth=${this.token}&path=${encodedPath}`;
+		const url = `https://${this.apiServer}/uploadfile?auth=${this.token}&path=${encodedPath}`;
 
 		const httpResponse = await fetch(url, {
 			method: "POST",

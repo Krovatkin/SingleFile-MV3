@@ -799,6 +799,10 @@
 		"message": "upload to pCloud",
 		"description": "Options page label: 'upload to pCloud'"
 	},
+	"optionPCloudApiServer": {
+		"message": "API Region",
+		"description": "Label of the input to set the pCloud API region"
+	},
 	"optionPCloudToken": {
 		"message": "access token",
 		"description": "Options page label: 'access token'"

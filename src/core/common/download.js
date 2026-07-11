@@ -71,6 +71,7 @@ async function downloadPage(pageData, options) {
 		saveToGDrive: options.saveToGDrive,
 		saveToDropbox: options.saveToDropbox,
 		saveToPCloud: options.saveToPCloud,
+		pCloudApiServer: options.pCloudApiServer,
 		pCloudToken: options.pCloudToken,
 		pCloudFolder: options.pCloudFolder,
 		saveWithWebDAV: options.saveWithWebDAV,

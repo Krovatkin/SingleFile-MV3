@@ -263,7 +263,7 @@ async function downloadContent(message, tab) {
 					prompt
 				});
 			} else if (message.saveToPCloud) {
-				response = await saveToPCloud(message.taskId, encodeSharpCharacter(message.filename), new Blob([message.content], { type: message.mimeType }), message.pCloudToken, message.pCloudFolder, {
+				response = await saveToPCloud(message.taskId, encodeSharpCharacter(message.filename), new Blob([message.content], { type: message.mimeType }), message.pCloudApiServer, message.pCloudToken, message.pCloudFolder, {
 					filenameConflictAction: message.filenameConflictAction,
 					prompt
 				});
@@ -414,7 +414,7 @@ async function downloadCompressedContent(message, tab) {
 				});
 			} else if (message.saveToPCloud) {
 				const blob = await (await fetch(blobURI)).blob();
-				response = await saveToPCloud(message.taskId, encodeSharpCharacter(message.filename), blob, message.pCloudToken, message.pCloudFolder, {
+				response = await saveToPCloud(message.taskId, encodeSharpCharacter(message.filename), blob, message.pCloudApiServer, message.pCloudToken, message.pCloudFolder, {
 					filenameConflictAction: message.filenameConflictAction,
 					prompt
 				});
@@ -542,11 +542,11 @@ async function saveToS3(taskId, filename, blob, domain, region, bucket, accessKe
 	}
 }
 
-async function saveToPCloud(taskId, filename, blob, token, folder, { filenameConflictAction, prompt }) {
+async function saveToPCloud(taskId, filename, blob, apiServer, token, folder, { filenameConflictAction, prompt }) {
 	try {
 		const taskInfo = business.getTaskInfo(taskId);
 		if (!taskInfo || !taskInfo.cancelled) {
-			const client = new pCloud();
+			const client = new pCloud(apiServer);
 			client.setAuthInfo({ accessToken: token, folder: folder });
 			business.setCancelCallback(taskId, () => client.abort());
 			return await client.upload(filename, blob, { filenameConflictAction, prompt });
