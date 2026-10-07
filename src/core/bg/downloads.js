@@ -572,7 +572,7 @@ async function saveToPCloud(taskId, filename, blob, apiServer, token, folder, { 
 			return await client.upload(filename, blob, { filenameConflictAction, prompt });
 		}
 	} catch (error) {
-		throw new Error(error.message + " (pCloud)");
+		throw new Error(error.message + " (pCloud)", { cause: error });
 	}
 }
 
