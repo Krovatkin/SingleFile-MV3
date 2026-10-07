@@ -82,6 +82,16 @@ export default [{
 	plugins: PLUGINS,
 	external: EXTERNAL
 }, {
+	input: ["single-file-core/single-file-archive.js"],
+	output: [{
+		file: "lib/single-file-archive.js",
+		format: "es",
+		plugins: []
+	}],
+	context: "this",
+	plugins: PLUGINS,
+	external: EXTERNAL
+}, {
 	input: ["src/core/content/content-bootstrap.js"],
 	output: [{
 		file: "lib/single-file-extension-bootstrap.js",
@@ -142,7 +152,8 @@ export default [{
 		file: "lib/single-file-extension-background.js",
 		format: "iife",
 		plugins: []
-	}]
+	}],
+	plugins: PLUGINS
 }, {
 	input: ["src/core/bg/offscreen-document.js"],
 	output: [{

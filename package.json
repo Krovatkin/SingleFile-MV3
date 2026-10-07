@@ -6,17 +6,23 @@
 	"license": "AGPL-3.0-or-later",
 	"scripts": {
 		"dev": "./build-dev.sh",
-		"build": "./build-extension.sh"
+		"build": "./build-extension.sh",
+		"test": "node test/editor-e2e.mjs",
+		"test:unit": "node --test \"test/*.test.js\"",
+		"install-test-browser": "browsers install chrome@131.0.6778.204 --path test/.browser"
 	},
 	"type": "module",
 	"dependencies": {
-		"single-file-core": "1.5.84"
+		"single-file-core": "^1.6.5"
 	},
 	"devDependencies": {
-		"eslint": "^10.0.0",
+		"@eslint/js": "^10.0.1",
+		"@puppeteer/browsers": "^3.2.1",
 		"@rollup/plugin-node-resolve": "16.0.3",
-		"@rollup/plugin-terser": "0.4.4",
-		"rollup": "^4.57.1"
+		"@rollup/plugin-terser": "1.0.0",
+		"eslint": "^10.0.0",
+		"rollup": "^4.57.1",
+		"simple-cdp": "^1.10.1"
 	},
 	"overrides": {
 		"terser": "^5.15.0"
